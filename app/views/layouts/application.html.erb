@@ -1,14 +1,70 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Facebaddtest</title>
+    <title>Facebaddtest, Facebook Login Authentication Example</title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '262932207465813',
+      xfbml      : true,
+      version    : 'v2.8'
+    });
+    FB.AppEvents.logPageView();
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+
+  function testAPI() {
+    console.log('Welcome!  Fetching your information.... ');
+
+    FB.api('/me', function(response) {
+      document.getElementById('status').innerHTML =
+        'Thanks for logging in, ' + response.name + JSON.stringify(response) +'!' ;
+    });
+  };
+
+
+function postTest(){
+FB.login(function(response) {
+       FB.api('/me/likes', function(response2) {
+           document.getElementById('status').innerHTML ='YOU LIKE: '  + JSON.stringify(response2) ;
+     });
+}, {
+    scope: 'user_likes', 
+    return_scopes: true
+});
+};
+</script>
+
+
+
+
+
+
+
+
+
   </head>
 
   <body>
+<div id="fb-root"><button onclick="testAPI()">test login</button></div>
+<div id="fb-2"><button onclick="postTest()">test likes</button></div>
+<div id='status'> </div>
+<div id='status2'> </div>
+<div class="fb-login-button" data-max-rows="11" data-size="large" data-show-faces="true" data-auto-logout-link="true"></div>
+
     <%= yield %>
   </body>
 </html>
